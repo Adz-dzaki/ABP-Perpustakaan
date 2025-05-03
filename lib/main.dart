@@ -17,7 +17,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Poppins',
       ),
-      home: LoginPage(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
+        '/home': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return HomePage(namaUser: args['namaUser']);
+        },
+      },
     );
   }
 }
