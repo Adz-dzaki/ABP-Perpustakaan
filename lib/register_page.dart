@@ -1,4 +1,7 @@
+import 'package:dashboard_perpus/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -55,11 +58,22 @@ class _RegisterPageState extends State<RegisterPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Form valid, data siap dikirim!')),
-                        );
+                        if (passwordController.text != confirmPasswordController.text) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Password dan konfirmasi tidak cocok')),
+                          );
+                          return;
+                        }
+                        if (selectedDate == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Tanggal lahir harus diisi')),
+                          );
+                          return;
+                        }
+                        registerUser();
                       }
                     },
+
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       minimumSize: const Size.fromHeight(45),
@@ -73,7 +87,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   ElevatedButton(
                     onPressed: () {
-                      // Navigasi ke halaman login di sini kalau sudah dibuat
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
@@ -139,4 +156,46 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
+  Future<void> registerUser() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final namaDepan = firstNameController.text.trim();
+    final namaBelakang = lastNameController.text.trim();
+    final tanggalLahir = "${selectedDate!.year.toString().padLeft(4, '0')}-${selectedDate!.month.toString().padLeft(2, '0')}-${selectedDate!.day.toString().padLeft(2, '0')}";
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8080/api/auth/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+          'nama_depan': namaDepan,
+          'nama_belakang': namaBelakang,
+          'tanggal_lahir': tanggalLahir,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registrasi berhasil, silakan login')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      } else {
+        final data = json.decode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal daftar: ${data['message'] ?? 'Unknown error'}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
+    }
+  }
+
 }

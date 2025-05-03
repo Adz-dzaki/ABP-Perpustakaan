@@ -1,5 +1,7 @@
+import 'package:dashboard_perpus/login_page.dart';
+import 'package:dashboard_perpus/register_page.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart'; // HomePage kamu
+import 'home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Poppins',
       ),
-      home: const HomePage(),
+      home: LoginPage(),
     );
   }
 }
