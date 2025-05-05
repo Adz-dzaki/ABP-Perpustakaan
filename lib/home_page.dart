@@ -8,12 +8,12 @@ import 'booking_page.dart';
 
 class HomePage extends StatefulWidget {
   final String namaUser;
-  final int accountId; // ✅ DITAMBAH
+  final int accountId;
 
   const HomePage({
     super.key,
     required this.namaUser,
-    required this.accountId, // ✅ DITAMBAH
+    required this.accountId,
   });
 
   @override
@@ -49,12 +49,18 @@ class _HomePageState extends State<HomePage> {
 
   String getRakLabel(int rakId) {
     switch (rakId) {
-      case 1: return 'Fiksi';
-      case 2: return 'Non-Fiksi';
-      case 3: return 'Referensi';
-      case 4: return 'Science';
-      case 5: return 'Comic';
-      default: return 'Unknown';
+      case 1:
+        return 'Fiksi';
+      case 2:
+        return 'Non-Fiksi';
+      case 3:
+        return 'Referensi';
+      case 4:
+        return 'Science';
+      case 5:
+        return 'Comic';
+      default:
+        return 'Unknown';
     }
   }
 
@@ -76,8 +82,8 @@ class _HomePageState extends State<HomePage> {
           },
           children: [
             _buildHomeContent(),
-            BookingPage(accountId: widget.accountId), // Placeholder
-            ProfilePage(accountId: widget.accountId), // ✅ PERBAIKI INI
+            BookingPage(accountId: widget.accountId),
+            ProfilePage(accountId: widget.accountId),
           ],
         ),
       ),
@@ -127,10 +133,12 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(),
+              Builder(
+                builder: (context) => _buildHeader(context),
+              ),
               const SizedBox(height: 16),
               Text(
-                'Selamat datang ${widget.namaUser}!',
+                'Selamat datang di',
                 style: const TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
@@ -138,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const Text(
-                'di Perpustakaan Jaya Abadi',
+                'Perpustakaan Jaya Abadi!',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
@@ -178,7 +186,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return CustomHeader(
       onMenuTap: () => Scaffold.of(context).openDrawer(),
       onLogoutTap: () {
@@ -186,7 +194,6 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
 
   Widget _buildSearchField() {
     return Container(
