@@ -1,3 +1,4 @@
+import 'package:dashboard_perpus/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:dashboard_perpus/service/book_service.dart';
@@ -5,8 +6,13 @@ import '../models/book_model.dart';
 
 class HomePage extends StatefulWidget {
   final String namaUser;
+  final int accountId; // ✅ DITAMBAH
 
-  const HomePage({super.key, required this.namaUser});
+  const HomePage({
+    super.key,
+    required this.namaUser,
+    required this.accountId, // ✅ DITAMBAH
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -14,7 +20,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-
   late Future<List<BookModel>> futureBooks;
   late PageController _pageController;
 
@@ -70,7 +75,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             _buildHomeContent(),
             Center(child: Text('Booking Page')), // Placeholder
-            Center(child: Text('Profil Page')), // Placeholder
+            ProfilePage(accountId: widget.accountId), // ✅ PERBAIKI INI
           ],
         ),
       ),
@@ -80,7 +85,6 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
           child: GNav(
             gap: 8,
-            // backgroundColor: Colors.blueAccent,
             color: Colors.white,
             activeColor: Colors.white,
             tabBackgroundColor: Colors.lightBlueAccent,
@@ -124,7 +128,7 @@ class _HomePageState extends State<HomePage> {
               _buildHeader(),
               const SizedBox(height: 16),
               Text(
-                'Selamat datang ${widget.namaUser}! di',
+                'Selamat datang ${widget.namaUser}!',
                 style: const TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
@@ -132,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const Text(
-                'Perpustakaan Jaya Abadi',
+                'di Perpustakaan Jaya Abadi',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
@@ -159,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 0.6,
+                  childAspectRatio: 0.62,
                 ),
                 itemCount: displayedBooks.length,
                 itemBuilder: (context, index) =>
@@ -184,15 +188,9 @@ class _HomePageState extends State<HomePage> {
         ),
         IconButton(
           icon: const Icon(Icons.logout, color: Colors.red),
-          onPressed: () async {
-            // Tambahkan logika logout di sini jika diperlukan
-            // Misalnya: membersihkan session atau state
-
-            // Navigasi ke halaman login dengan menghapus semua route sebelumnya
+          onPressed: () {
             Navigator.of(context).pushNamedAndRemoveUntil(
-                '/login',
-                    (Route<dynamic> route) => false
-            );
+                '/login', (Route<dynamic> route) => false);
           },
         ),
       ],
@@ -238,11 +236,10 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Spacer(),
           const Center(
             child: Icon(Icons.menu_book, size: 64, color: Colors.grey),
           ),
-          const Spacer(),
+          const SizedBox(height: 8),
           Text(
             book.namaBuku,
             maxLines: 2,
@@ -266,16 +263,15 @@ class _HomePageState extends State<HomePage> {
               color: book.statusBooking == 0 ? Colors.green : Colors.red,
             ),
           ),
-          const SizedBox(height: 8),
+          const Spacer(),
           Center(
             child: ElevatedButton(
               onPressed: book.statusBooking == 0
                   ? () => print('Booking ${book.namaBuku}')
                   : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: book.statusBooking == 0
-                    ? Colors.blue
-                    : Colors.grey,
+                backgroundColor:
+                book.statusBooking == 0 ? Colors.blue : Colors.grey,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -318,22 +314,26 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          _drawerItem(Icons.home, 'Beranda'),
-          _drawerItem(Icons.book_online, 'Booking'),
-          _drawerItem(Icons.person, 'Profil'),
+          _drawerItem(Icons.home, 'Beranda', 0),
+          _drawerItem(Icons.book_online, 'Booking', 1),
+          _drawerItem(Icons.person, 'Profil', 2),
         ],
       ),
     );
   }
 
-  Widget _drawerItem(IconData icon, String title) {
+  Widget _drawerItem(IconData icon, String title, int index) {
     return ListTile(
       leading: Icon(icon),
       title: Text(
         title,
-        style: const TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w600),
+        style:
+        const TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w600),
       ),
-      onTap: () => Navigator.pop(context),
+      onTap: () {
+        Navigator.pop(context);
+        _onNavTapped(index);
+      },
     );
   }
 }

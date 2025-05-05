@@ -23,7 +23,12 @@ class MyApp extends StatelessWidget {
         '/register': (context) => RegisterPage(),
         '/home': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-          return HomePage(namaUser: args['namaUser']);
+
+          // Pastikan 'namaUser' dan 'accountId' ada dalam args
+          return HomePage(
+            namaUser: args['namaUser'],
+            accountId: args['accountId'], // Tambahkan accountId
+          );
         },
       },
     );

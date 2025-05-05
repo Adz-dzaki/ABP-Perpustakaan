@@ -36,13 +36,14 @@ class _LoginPageState extends State<LoginPage> {
         final firstName = data['firstName'];
         final fullName = data['name'];
         final token = data['token'];
+        final accountId = data['accountId']; // ambil accountId
 
-        // Simpan token ke local storage
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
         await prefs.setString('firstName', firstName);
         await prefs.setString('fullName', fullName);
         await prefs.setString('email', data['email']);
+        await prefs.setInt('accountId', accountId); // simpan accountId
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(data['message'])),
@@ -51,7 +52,10 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(namaUser: firstName),
+            builder: (context) => HomePage(
+              namaUser: firstName,
+              accountId: accountId, // Kirimkan accountId
+            ),
           ),
         );
       } else {
