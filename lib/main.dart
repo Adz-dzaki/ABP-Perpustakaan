@@ -1,5 +1,6 @@
 import 'package:dashboard_perpus/login_page.dart';
 import 'package:dashboard_perpus/register_page.dart';
+import 'package:dashboard_perpus/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 
@@ -17,17 +18,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Poppins',
       ),
-      initialRoute: '/login',
+      initialRoute: '/splash',
       routes: {
+        '/splash': (context) => const SplashScreen(),
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/home': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-          // Pastikan 'namaUser' dan 'accountId' ada dalam args
           return HomePage(
             namaUser: args['namaUser'],
-            accountId: args['accountId'], // Tambahkan accountId
+            accountId: args['accountId'],
           );
         },
       },
