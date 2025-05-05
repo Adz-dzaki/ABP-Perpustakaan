@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:dashboard_perpus/widgets/custom_header.dart'; // Impor CustomHeader
 
 class ProfilePage extends StatefulWidget {
   final int accountId;
@@ -120,49 +121,71 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Profil"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              if (isEditMode) {
-                updateProfile();
-              } else {
-                setState(() => isEditMode = true);
-              }
-            },
-            child: Text(
-              isEditMode ? 'Simpan' : 'Edit',
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-        ],
-      ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+      body: SafeArea(
         child: Column(
           children: [
-            buildTextField(
-              label: 'Nama Depan',
-              controller: _namaDepanController,
-              enabled: isEditMode,
+            CustomHeader(
+              onMenuTap: () => Scaffold.of(context).openDrawer(),
+              onLogoutTap: () {
+                Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+              },
             ),
-            buildTextField(
-              label: 'Nama Belakang',
-              controller: _namaBelakangController,
-              enabled: isEditMode,
-            ),
-            buildTextField(
-              label: 'Email',
-              controller: _emailController,
-              enabled: isEditMode,
-            ),
-            buildTextField(
-              label: 'Tanggal Lahir (YYYY-MM-DD)',
-              controller: _tanggalLahirController,
-              enabled: isEditMode,
+            Expanded(
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    buildTextField(
+                      label: 'Nama Depan',
+                      controller: _namaDepanController,
+                      enabled: isEditMode,
+                    ),
+                    buildTextField(
+                      label: 'Nama Belakang',
+                      controller: _namaBelakangController,
+                      enabled: isEditMode,
+                    ),
+                    buildTextField(
+                      label: 'Email',
+                      controller: _emailController,
+                      enabled: isEditMode,
+                    ),
+                    buildTextField(
+                      label: 'Tanggal Lahir (YYYY-MM-DD)',
+                      controller: _tanggalLahirController,
+                      enabled: isEditMode,
+                    ),
+                    SizedBox(height: 20), // Menambahkan jarak sebelum tombol
+                    // Tombol Edit atau Simpan
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (isEditMode) {
+                            updateProfile(); // Perbarui profil saat mode edit
+                          } else {
+                            setState(() => isEditMode = true); // Masuk ke mode edit
+                          }
+                        },
+                        child: Text(
+                          isEditMode ? 'Simpan' : 'Edit Profil',
+                          style: TextStyle(color: isEditMode ? Colors.black : Colors.black), // Warna teks
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white, // Latar belakang putih
+                          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                          textStyle: TextStyle(fontSize: 16),
+                          elevation: 5, // Menambahkan efek shadow
+                          shadowColor: Colors.grey.withOpacity(0.5), // Warna shadow
+                          side: BorderSide(color: Colors.white), // Border biru jika diinginkan
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
             ),
           ],
         ),

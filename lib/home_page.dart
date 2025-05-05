@@ -1,8 +1,10 @@
 import 'package:dashboard_perpus/profile_page.dart';
+import 'package:dashboard_perpus/widgets/custom_header.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:dashboard_perpus/service/book_service.dart';
 import '../models/book_model.dart';
+import 'booking_page.dart';
 
 class HomePage extends StatefulWidget {
   final String namaUser;
@@ -74,7 +76,7 @@ class _HomePageState extends State<HomePage> {
           },
           children: [
             _buildHomeContent(),
-            Center(child: Text('Booking Page')), // Placeholder
+            BookingPage(accountId: widget.accountId), // Placeholder
             ProfilePage(accountId: widget.accountId), // ✅ PERBAIKI INI
           ],
         ),
@@ -177,25 +179,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.logout, color: Colors.red),
-          onPressed: () {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/login', (Route<dynamic> route) => false);
-          },
-        ),
-      ],
+    return CustomHeader(
+      onMenuTap: () => Scaffold.of(context).openDrawer(),
+      onLogoutTap: () {
+        Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+      },
     );
   }
+
 
   Widget _buildSearchField() {
     return Container(
