@@ -33,17 +33,35 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
 
+        final role = data['role'];
+        if (role == 'admin') {
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text("Akses Ditolak"),
+              content: Text("Akun admin hanya bisa login melalui website."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text("OK"),
+                ),
+              ],
+            ),
+          );
+          return;
+        }
+
         final firstName = data['firstName'];
         final fullName = data['name'];
         final token = data['token'];
-        final accountId = data['accountId']; // ambil accountId
+        final accountId = data['accountId'];
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
         await prefs.setString('firstName', firstName);
         await prefs.setString('fullName', fullName);
         await prefs.setString('email', data['email']);
-        await prefs.setInt('accountId', accountId); // simpan accountId
+        await prefs.setInt('accountId', accountId);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(data['message'])),
@@ -54,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
           MaterialPageRoute(
             builder: (context) => HomePage(
               namaUser: firstName,
-              accountId: accountId, // Kirimkan accountId
+              accountId: accountId,
             ),
           ),
         );
