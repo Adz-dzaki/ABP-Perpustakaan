@@ -48,6 +48,7 @@ class _BookingPageState extends State<BookingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       drawer: _buildDrawer(context),
       body: SafeArea(
         child: Padding(
