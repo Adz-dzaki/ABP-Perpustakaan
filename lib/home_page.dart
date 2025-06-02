@@ -29,7 +29,6 @@ class _HomePageState extends State<HomePage> {
   late PageController _pageController;
 
   String searchQuery = '';
-  // DateTime? _selectedDate; // Tampaknya tidak digunakan secara global, hanya lokal di _selectDate
 
   @override
   void initState() {
@@ -116,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                 TextSpan(text: "${book.namaBuku}\n", style: TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(text: "Tanggal pengambilan: "),
                 TextSpan(text: DateFormat('dd MMM yyyy', 'id_ID').format(bookingDate), style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: ".\n\nBatas pengambilan buku adalah pada hari yang sama sebelum perpustakaan tutup."),
+                TextSpan(text: ".\n\nBatas pengambilan buku adalah 7 hari setelah buku di booking."),
               ],
             ),
           ),
@@ -322,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 12,
                           mainAxisSpacing: 12,
-                          childAspectRatio: 0.50, // Disesuaikan, mungkin perlu di-tweak lagi
+                          childAspectRatio: 0.50,
                         ),
                         itemCount: displayedBooks.length,
                         itemBuilder: (context, index) => _buildBookCard(displayedBooks[index]),
