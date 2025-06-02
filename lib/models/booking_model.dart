@@ -5,8 +5,8 @@ class BookingModel {
   final String tipeBuku;
   final String tglTerbit;
   final String rakBuku;
-  final DateTime bookingDate;  // Ganti String menjadi DateTime
-  final DateTime expiredDate;  // Ganti String menjadi DateTime
+  final DateTime bookingDate;
+  final DateTime expiredDate;
 
   BookingModel({
     required this.namaBuku,
@@ -26,9 +26,9 @@ class BookingModel {
       jenisBuku: json['jenis_buku'],
       tipeBuku: json['tipe_buku'],
       tglTerbit: json['tgl_terbit'],
-      rakBuku: json['rakbuku_id_fk'].toString(),  // Asumsi rakbuku_id_fk adalah angka
-      bookingDate: DateTime.parse(json['booking_date']), // Mengonversi ke DateTime
-      expiredDate: DateTime.parse(json['expired_date']), // Mengonversi ke DateTime
+      rakBuku: json['rakbuku_id_fk'].toString(),
+      bookingDate: DateTime.parse(json['booking_date'] ),
+      expiredDate: DateTime.parse(json['expired_date'] ),
     );
   }
 }

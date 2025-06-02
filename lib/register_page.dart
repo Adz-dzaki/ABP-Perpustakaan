@@ -18,6 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final lastNameController = TextEditingController();
   DateTime? selectedDate;
   bool isLoading = false;
+  bool _obscurePassword = true;
 
   Future<void> registerUser() async {
     setState(() => isLoading = true);
@@ -160,7 +161,18 @@ class _RegisterPageState extends State<RegisterPage> {
                                         decoration: InputDecoration(
                                             hintText: "Password",
                                             hintStyle: TextStyle(color: Colors.grey),
-                                            border: InputBorder.none
+                                            border: InputBorder.none,
+                                            suffixIcon: IconButton( // Tambahkan IconButton
+                                              icon: Icon(
+                                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                                color: Colors.grey,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _obscurePassword = !_obscurePassword;
+                                                });
+                                            },
+                                          )
                                         ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
@@ -183,7 +195,18 @@ class _RegisterPageState extends State<RegisterPage> {
                                         decoration: InputDecoration(
                                             hintText: "Konfirmasi Password",
                                             hintStyle: TextStyle(color: Colors.grey),
-                                            border: InputBorder.none
+                                            border: InputBorder.none,
+                                            suffixIcon: IconButton( // Tambahkan IconButton
+                                              icon: Icon(
+                                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                                color: Colors.grey,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _obscurePassword = !_obscurePassword;
+                                                });
+                                              },
+                                            )
                                         ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {

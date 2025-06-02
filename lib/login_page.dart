@@ -16,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isLoading = false;
+  bool _obscurePassword = true; // Tambahkan state untuk visibilitas password
 
   Future<void> loginUser() async {
     final email = emailController.text.trim();
@@ -48,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           );
+          setState(() => isLoading = false); // Pastikan isLoading false jika admin
           return;
         }
 
@@ -64,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
         await prefs.setInt('accountId', accountId);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(data['message'])),
+          SnackBar(content: Text(data['message'] ?? 'Login berhasil')), // Beri default message jika null
         );
 
         Navigator.pushReplacement(
@@ -87,7 +89,10 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(content: Text('Terjadi kesalahan: $e')),
       );
     } finally {
-      setState(() => isLoading = false);
+      // Pastikan isLoading di set ke false di sini juga, kecuali jika sudah di handle di admin check
+      if (mounted) { // Check if the widget is still in the tree
+        setState(() => isLoading = false);
+      }
     }
   }
 
@@ -169,22 +174,37 @@ class _LoginPageState extends State<LoginPage> {
                                             if (value == null || value.isEmpty) {
                                               return 'Email tidak boleh kosong';
                                             }
+                                            if (!value.contains('@')) { // Contoh validasi email sederhana
+                                              return 'Masukkan email yang valid';
+                                            }
                                             return null;
                                           },
                                         ),
                                       ),
                                       Container(
                                         padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                        ),
+                                        // Hapus border bawah dari sini jika ingin border hanya antar field
+                                        // decoration: BoxDecoration(
+                                        //     border: Border(bottom: BorderSide(color: Colors.grey.shade200))
+                                        // ),
                                         child: TextFormField(
                                           controller: passwordController,
-                                          obscureText: true,
+                                          obscureText: _obscurePassword, // Gunakan state di sini
                                           decoration: InputDecoration(
                                               hintText: "Password",
                                               hintStyle: TextStyle(color: Colors.grey),
-                                              border: InputBorder.none
+                                              border: InputBorder.none,
+                                              suffixIcon: IconButton( // Tambahkan IconButton
+                                                icon: Icon(
+                                                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                                  color: Colors.grey,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _obscurePassword = !_obscurePassword;
+                                                  });
+                                                },
+                                              )
                                           ),
                                           validator: (value) {
                                             if (value == null || value.isEmpty) {
@@ -241,6 +261,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ],
                               ),
                             ),
+                            SizedBox(height: 20), // Tambahan padding bawah
                           ],
                         ),
                       ),

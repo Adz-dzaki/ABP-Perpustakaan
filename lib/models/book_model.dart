@@ -1,4 +1,5 @@
 class BookModel {
+  final int bukuId;
   final String namaBuku;
   final String author;
   final String jenisBuku;
@@ -8,6 +9,7 @@ class BookModel {
   final int statusBooking;
 
   BookModel({
+    required this.bukuId,
     required this.namaBuku,
     required this.author,
     required this.jenisBuku,
@@ -19,26 +21,33 @@ class BookModel {
 
   factory BookModel.fromJson(Map<String, dynamic> json) {
     return BookModel(
+      bukuId: json['buku_id'], // tambahkan ini
       namaBuku: json['nama_buku'],
       author: json['author'],
       jenisBuku: json['jenis_buku'],
       tipeBuku: json['tipe_buku'],
       tanggalTerbit: json['tgl_terbit'],
       rakbukuId: json['rakbuku_id_fk'],
-        statusBooking: json['status_booking'] is bool
-            ? (json['status_booking'] ? 1 : 0)
-            : json['status_booking'] ?? 0,
+      statusBooking: json['status_booking'] is bool
+          ? (json['status_booking'] ? 1 : 0)
+          : json['status_booking'] ?? 0,
     );
   }
 
   String get rakLabel {
     switch (rakbukuId) {
-      case 1: return 'Fiksi';
-      case 2: return 'Non-Fiksi';
-      case 3: return 'Referensi';
-      case 4: return 'Science';
-      case 5: return 'Comic';
-      default: return 'Tidak diketahui';
+      case 1:
+        return 'Fiksi';
+      case 2:
+        return 'Non-Fiksi';
+      case 3:
+        return 'Referensi';
+      case 4:
+        return 'Science';
+      case 5:
+        return 'Comic';
+      default:
+        return 'Tidak diketahui';
     }
   }
 
