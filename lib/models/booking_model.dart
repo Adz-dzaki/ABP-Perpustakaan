@@ -7,6 +7,7 @@ class BookingModel {
   final String rakBuku;
   final DateTime bookingDate;
   final DateTime expiredDate;
+  int denda;
 
   BookingModel({
     required this.namaBuku,
@@ -17,6 +18,7 @@ class BookingModel {
     required this.rakBuku,
     required this.bookingDate,
     required this.expiredDate,
+    this.denda = 0,
   });
 
   factory BookingModel.fromJson(Map<String, dynamic> json) {
